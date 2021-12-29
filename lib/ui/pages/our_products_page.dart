@@ -73,7 +73,6 @@ class _OurProductsPageState extends State<OurProductsPage> {
                                   )));
                       statusList = result;
                       setState(() {});
-
                     }),
                 Expanded(
                   child: NotificationListener<OverscrollIndicatorNotification>(
@@ -116,9 +115,7 @@ class _OurProductsPageState extends State<OurProductsPage> {
     if (data != null) {
       shoesList = (data.shoes!);
       statusList = List.generate(shoesList.length, (index) => false);
-      numberOfShoesList = List.generate(shoesList.length, (index) {
-        return 0;
-      });
+      numberOfShoesList = List.generate(shoesList.length, (index) => index= 0);
       setState(() {});
     }
   }

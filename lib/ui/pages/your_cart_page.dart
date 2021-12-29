@@ -23,7 +23,7 @@ class YourCartPage extends StatefulWidget {
 
 class _YourCartPageState extends State<YourCartPage> {
   List<Shoes>? shoesList;
-  double? total=0.00;
+  double? total = 0.00;
   List<int>? numberOfShoesList;
   List<bool>? statusList;
 
@@ -34,10 +34,15 @@ class _YourCartPageState extends State<YourCartPage> {
     shoesList = widget.shoesList;
     numberOfShoesList = widget.numberOfShoesList;
     statusList = widget.statusList;
-     for(var item in shoesList!)
-       {
-         total = total! + item.price!;
-       }
+    //  print("haha ${shoesList?.length}");
+    print("hah1 ${numberOfShoesList}");
+    for (int i = 0; i < shoesList!.length; i++) {
+      for (int j = 0; j < numberOfShoesList!.length; j++) {
+        if (i == j) {
+          total = total! + shoesList![i].price! * numberOfShoesList![j];
+        }
+      }
+    }
   }
 
   @override
@@ -90,22 +95,29 @@ class _YourCartPageState extends State<YourCartPage> {
                                 shoes: shoesList![index],
                                 quantily: numberOfShoesList![index],
                                 onMinus: () {
-                                  onMinus(
-                                      price: shoesList![index].price,
-                                      numberOfShoes: numberOfShoesList![index],
-                                      status: statusList?[index]);
+                                  numberOfShoesList![index]--;
+                                  total = total! - shoesList![index].price!;
+                                  if (numberOfShoesList![index] <= 0) {
+                                    statusList?[index] = false;
+                                  }
+
+                                  setState(() {});
                                 },
                                 onPlus: () {
-                                  onMinus(
-                                      price: shoesList![index].price,
-                                      numberOfShoes: numberOfShoesList![index],
-                                      status: statusList?[index]);
+                                  numberOfShoesList![index]++;
+                                  total = total! + shoesList![index].price!;
+                                  setState(() {});
                                 },
                                 onTrash: () {
-                                  onTrash(
-                                      price: shoesList![index].price,
-                                      numberOfShoes: numberOfShoesList![index],
-                                      status: statusList?[index]);
+                                  total = total! -
+                                      shoesList![index].price! *
+                                          numberOfShoesList![index];
+                                  numberOfShoesList![index] = 0;
+
+                                  print("a ${shoesList![index].price}");
+                                  print("b ${numberOfShoesList![index]}");
+                                  statusList?[index] = false;
+                                  setState(() {});
                                 },
                               );
                       },
@@ -119,28 +131,5 @@ class _YourCartPageState extends State<YourCartPage> {
         ],
       ),
     ));
-  }
-
-  void onMinus({int? numberOfShoes, double? price, bool? status}) {
-    numberOfShoes = numberOfShoes! - 1;
-    total = total! - price!;
-    if (numberOfShoes <= 0) {
-      status = false;
-    }
-    setState(() {});
-  }
-
-  void onPlus({int? numberOfShoes, double? price, bool? status}) {
-    numberOfShoes = numberOfShoes! + 1;
-    total = total! + price!;
-
-    setState(() {});
-  }
-
-  void onTrash({int? numberOfShoes, double? price, bool? status}) {
-    numberOfShoes = 0;
-    total = total! + price!;
-    status = false;
-    setState(() {});
   }
 }

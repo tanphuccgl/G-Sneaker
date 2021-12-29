@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
 import 'package:g_sneaker/utils/my_images.dart';
 
-Widget headerCartWidget({BuildContext? context, double? total,Function()?
- onPressed}) {
+Widget headerCartWidget(
+    {BuildContext? context, double? total, Function()? onPressed}) {
   Size size = MediaQuery.of(context!).size;
   return SizedBox(
     width: size.width,
@@ -12,8 +12,11 @@ Widget headerCartWidget({BuildContext? context, double? total,Function()?
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IconButton(onPressed: onPressed, icon: Image.asset(nikeIcon),iconSize:size.width / 8 ,),
-
+        IconButton(
+          onPressed: onPressed,
+          icon: Image.asset(nikeIcon),
+          iconSize: size.width / 8,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -26,7 +29,9 @@ Widget headerCartWidget({BuildContext? context, double? total,Function()?
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              "\$$total",
+              total! <= 0.0
+                  ? "\$0.00"
+                  : "\$${double.parse(total.toStringAsFixed(2))}",
               style: TextStyle(
                   fontFamily: "Rubik",
                   color: blackColor,
