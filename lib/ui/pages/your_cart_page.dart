@@ -80,51 +80,69 @@ class _YourCartPageState extends State<YourCartPage> {
                     onPressed: () {
                       Navigator.pop(context, statusList);
                     }),
-                Expanded(
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification: (overscroll) {
-                      overscroll.disallowGlow();
-                      return true;
-                    },
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return numberOfShoesList![index] <= 0
-                            ? const SizedBox.shrink()
-                            : ItemCartWidget(
-                                shoes: shoesList![index],
-                                quantily: numberOfShoesList![index],
-                                onMinus: () {
-                                  numberOfShoesList![index]--;
-                                  total = total! - shoesList![index].price!;
-                                  if (numberOfShoesList![index] <= 0) {
-                                    statusList?[index] = false;
-                                  }
+                statusList!.contains(true)
+                    ? Expanded(
+                        child: NotificationListener<
+                            OverscrollIndicatorNotification>(
+                          onNotification: (overscroll) {
+                            overscroll.disallowGlow();
+                            return true;
+                          },
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return numberOfShoesList![index] <= 0
+                                  ? const SizedBox.shrink()
+                                  : ItemCartWidget(
+                                      shoes: shoesList![index],
+                                      quantily: numberOfShoesList![index],
+                                      onMinus: () {
+                                        numberOfShoesList![index]--;
+                                        total =
+                                            total! - shoesList![index].price!;
+                                        if (numberOfShoesList![index] <= 0) {
+                                          statusList?[index] = false;
+                                        }
 
-                                  setState(() {});
-                                },
-                                onPlus: () {
-                                  numberOfShoesList![index]++;
-                                  total = total! + shoesList![index].price!;
-                                  setState(() {});
-                                },
-                                onTrash: () {
-                                  total = total! -
-                                      shoesList![index].price! *
-                                          numberOfShoesList![index];
-                                  numberOfShoesList![index] = 0;
+                                        setState(() {});
+                                      },
+                                      onPlus: () {
+                                        numberOfShoesList![index]++;
+                                        total =
+                                            total! + shoesList![index].price!;
+                                        setState(() {});
+                                      },
+                                      onTrash: () {
+                                        total = total! -
+                                            shoesList![index].price! *
+                                                numberOfShoesList![index];
+                                        numberOfShoesList![index] = 0;
 
-                                  print("a ${shoesList![index].price}");
-                                  print("b ${numberOfShoesList![index]}");
-                                  statusList?[index] = false;
-                                  setState(() {});
-                                },
-                              );
-                      },
-                      itemCount: shoesList!.length,
-                    ),
-                  ),
-                )
+                                        print("a ${shoesList![index].price}");
+                                        print("b ${numberOfShoesList![index]}");
+                                        statusList?[index] = false;
+                                        setState(() {});
+                                      },
+                                    );
+                            },
+                            itemCount: shoesList!.length,
+                          ),
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(top: size.width / 15),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Your cart is empty.",
+                            style: TextStyle(
+                                fontFamily: "Rubik",
+                                color: blackColor,
+                                fontSize: size.width / 20,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ),
+                      )
               ],
             ),
           ),
