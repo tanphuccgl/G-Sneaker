@@ -8,8 +8,10 @@ import 'package:hexcolor/hexcolor.dart';
 class ProductCard extends StatelessWidget {
   final Shoes? shoes;
   final Function()? onPressed;
+  final bool? isAddProduct;
 
-  const ProductCard({Key? key, this.shoes, this.onPressed}) : super(key: key);
+  const ProductCard({Key? key, this.shoes, this.onPressed, this.isAddProduct})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,8 @@ class ProductCard extends StatelessWidget {
             SizedBox(height: size.width / 15),
             _description(context: context, descrip: shoes!.description),
             SizedBox(height: size.width / 20),
-            _bottom(context: context, price: shoes!.price, onPressed: onPressed)
+            _bottom(context: context,
+                price: shoes!.price, onPressed: onPressed,isAddProduct: isAddProduct)
           ],
         ),
       ),
@@ -36,7 +39,11 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-Widget _bottom({BuildContext? context, double? price, Function()? onPressed}) {
+Widget _bottom(
+    {BuildContext? context,
+    double? price,
+    Function()? onPressed,
+    bool? isAddProduct}) {
   Size size = MediaQuery.of(context!).size;
   return SizedBox(
     height: size.width / 5,
@@ -55,9 +62,11 @@ Widget _bottom({BuildContext? context, double? price, Function()? onPressed}) {
                 fontWeight: FontWeight.bold),
           ),
         ),
-       // addButton(context: context, onPressed: onPressed)
-        checkMarkIcon(context: context,)
-
+        isAddProduct == false
+            ? addButton(context: context, onPressed: onPressed)
+            : checkMarkIcon(
+                context: context,
+              )
       ],
     ),
   );

@@ -3,3 +3,4 @@ String minusIcon = "assets/images/minus.png";
 String nikeIcon = "assets/images/nike.png";
 String plusIcon = "assets/images/plus.png";
 String trashIcon = "assets/images/trash.png";
+String cartIcon = "assets/images/cart.png";
