@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:g_sneaker/model/cart_model.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
+import 'package:g_sneaker/ui/wigets/background.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/header_cart.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/item_cart_widget.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
@@ -26,7 +28,7 @@ class YourCartPage extends StatefulWidget {
 
 class _YourCartPageState extends State<YourCartPage> {
   List<Shoes>? shoesList;
-  double? total = 0.00;
+  double? total =0;
   List<int>? numberOfShoesList;
   List<bool>? statusList;
 
@@ -37,62 +39,61 @@ class _YourCartPageState extends State<YourCartPage> {
     shoesList = widget.shoesList;
     numberOfShoesList = widget.numberOfShoesList;
     statusList = widget.statusList;
-    if (prefs?.getDouble("total") != null) {
-      total = prefs?.getDouble("total");
+
+
+    if (prefs?.getDouble("total") != null  && prefs!.getDouble("total")! > 0) {
+      print("1");
+        total = prefs?.getDouble("total");
+
+    } else {
+      print("3");
+
+      total= CartModel.totalPrice(
+          total: total,
+          numberOfShoesList: numberOfShoesList,
+          shoesList: shoesList);
+    }
+    if (prefs?.getString('statusList') != null) {
+      final String? temp = prefs?.getString('statusList');
+      List list = jsonDecode(temp!);
+      statusList = list.cast<bool>();
+
+    }
+    if (prefs?.getString('numberOfShoesList') != null) {
+      final String? temp = prefs?.getString('numberOfShoesList');
+      List list = jsonDecode(temp!);
+      numberOfShoesList = list.cast<int>();
 
     }else
       {
-        for (int i = 0; i < shoesList!.length; i++) {
-          for (int j = 0; j < numberOfShoesList!.length; j++) {
-            if (i == j) {
-              total = total! + shoesList![i].price! * numberOfShoesList![j];
-            }
-          }
-        }
+        numberOfShoesList;
       }
-
-    if (prefs?.getString('statusList') != null) {
-      final String? musicsString = prefs?.getString('statusList');
-
-      List musics = jsonDecode(musicsString!);
-
-      statusList = musics.cast<bool>();
-    }
-    if (prefs?.getString('numberOfShoesList') != null) {
-      final String? musicsString = prefs?.getString('numberOfShoesList');
-
-      List musics = jsonDecode(musicsString!);
-
-      numberOfShoesList = musics.cast<int>();
-    }
     if (prefs?.getString('shoesList') != null) {
-      final String? musicsString = prefs?.getString('shoesList');
+      final String? temp = prefs?.getString('shoesList');
+      List<Shoes> list =
+      (json.decode(temp!) as List).map((i) => Shoes.fromJson(i)).toList();
+      shoesList = list.cast<Shoes>();
 
-      List<Shoes> musics = (json.decode(musicsString!) as List)
-          .map((i) => Shoes.fromJson(i))
-          .toList();
-
-      shoesList = musics.cast<Shoes>();
     }
+
 
   }
-
-  void saveCartLocal({double? total}) {
+  void saveCartLocal({
+    double? total,
+    List<Shoes>? shoesList,
+    List<int>? numberOfShoesList,
+    List<bool>? statusList,
+  }) {
     prefs?.setDouble("total", total!);
 
     String jsonShoesList = jsonEncode(shoesList);
-
     prefs?.setString('shoesList', jsonShoesList);
 
-    ///
-    String jsonShoesList1 = jsonEncode(statusList);
+    String jsonStatusList = jsonEncode(statusList);
+    prefs?.setString('statusList', jsonStatusList);
 
-    prefs?.setString('statusList', jsonShoesList1);
-
-    ///
-    String jsonShoesList2 = jsonEncode(numberOfShoesList);
-
-    prefs?.setString('numberOfShoesList', jsonShoesList2);
+    String jsonNumberOfShoesList = jsonEncode(numberOfShoesList);
+    prefs?.setString('numberOfShoesList', jsonNumberOfShoesList);
   }
 
   @override
@@ -104,18 +105,7 @@ class _YourCartPageState extends State<YourCartPage> {
       height: size.height,
       child: Stack(
         children: [
-          // background
-          Positioned(
-              top: -150,
-              left: -250,
-              child: Container(
-                height: size.width,
-                width: size.width,
-                decoration: BoxDecoration(
-                    color: yellowColor,
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(size.width))),
-              )),
+          background(context: context),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 15),
             child: Column(
@@ -127,7 +117,7 @@ class _YourCartPageState extends State<YourCartPage> {
                     context: context,
                     total: total,
                     onPressed: () {
-                      Navigator.pop(context, statusList);
+                      Navigator.pop(context, [statusList,numberOfShoesList]);
                     }),
                 statusList!.contains(true)
                     ? Expanded(
@@ -152,16 +142,25 @@ class _YourCartPageState extends State<YourCartPage> {
 
                                         if (numberOfShoesList![index] <= 0) {
                                           statusList?[index] = false;
-
                                         }
-                                        saveCartLocal(total: total);
+                                       saveCartLocal(
+                                            total: total,
+                                            shoesList: shoesList,
+                                            numberOfShoesList:
+                                                numberOfShoesList,
+                                            statusList: statusList);
                                         setState(() {});
                                       },
                                       onPlus: () {
                                         numberOfShoesList![index]++;
                                         total =
                                             total! + shoesList![index].price!;
-                                        saveCartLocal(total: total);
+                                     saveCartLocal(
+                                            total: total,
+                                            shoesList: shoesList,
+                                            numberOfShoesList:
+                                                numberOfShoesList,
+                                            statusList: statusList);
 
                                         setState(() {});
                                       },
@@ -172,7 +171,12 @@ class _YourCartPageState extends State<YourCartPage> {
                                         numberOfShoesList![index] = 0;
 
                                         statusList?[index] = false;
-                                        saveCartLocal(total: total);
+                                 saveCartLocal(
+                                            total: total,
+                                            shoesList: shoesList,
+                                            numberOfShoesList:
+                                                numberOfShoesList,
+                                            statusList: statusList);
                                         setState(() {});
                                       },
                                     );

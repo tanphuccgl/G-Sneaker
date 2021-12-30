@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:g_sneaker/main.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
 import 'package:g_sneaker/ui/pages/your_cart_page.dart';
+import 'package:g_sneaker/ui/wigets/background.dart';
 import 'package:g_sneaker/ui/wigets/out_products/header_widget.dart';
 import 'package:g_sneaker/ui/wigets/out_products/product_card.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
-
 
 class OurProductsPage extends StatefulWidget {
   static const String routeName = "/OurProductsPage";
@@ -24,6 +24,7 @@ class _OurProductsPageState extends State<OurProductsPage> {
   bool? isAddProduct;
   List<bool>? statusList;
   List<int>? numberOfShoesList;
+  int? index1;
 
   @override
   void initState() {
@@ -34,25 +35,16 @@ class _OurProductsPageState extends State<OurProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // prefs?.clear();
     Size size = MediaQuery.of(context).size;
+   //  prefs?.clear();
+
     return Scaffold(
         body: SizedBox(
       width: size.width,
       height: size.height,
       child: Stack(
         children: [
-          Positioned(
-              top: -150,
-              left: -250,
-              child: Container(
-                height: size.width,
-                width: size.width,
-                decoration: BoxDecoration(
-                    color: yellowColor,
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(size.width))),
-              )),
+          background(context: context),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 15),
             child: Column(
@@ -63,7 +55,7 @@ class _OurProductsPageState extends State<OurProductsPage> {
                 headerWidget(
                     context: context,
                     onPressed: () async {
-                      final result = await Navigator.push(
+                      List result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => YourCartPage(
@@ -71,7 +63,9 @@ class _OurProductsPageState extends State<OurProductsPage> {
                                     statusList: statusList,
                                     numberOfShoesList: numberOfShoesList,
                                   )));
-                      statusList = result;
+                      print(result.first);
+                      statusList = result.first;
+                      numberOfShoesList=result[1];
                       setState(() {});
                     }),
                 Expanded(
@@ -94,27 +88,31 @@ class _OurProductsPageState extends State<OurProductsPage> {
                         return ProductCard(
                           shoes: shoesList[index],
                           onPressed: () {
-                            statusList![index] = true;
-                            if (statusList![index] == true) {
-                              numberOfShoesList?[index] = 1;
-                            }
 
-                            String jsonShoesList = jsonEncode(shoesList);
+                              statusList![index] = true;
+                              if (statusList![index] == true
+                                 ) {
 
-                            prefs?.setString('shoesList', jsonShoesList);
+                                numberOfShoesList?[index] = 1;
+                              }
+                              String jsonShoesList = jsonEncode(shoesList);
 
-                            ///23
-                            String jsonShoesList1 = jsonEncode(statusList);
+                              prefs?.setString('shoesList', jsonShoesList);
 
-                            prefs?.setString('statusList', jsonShoesList1);
+                              ///23
+                              String jsonShoesList1 = jsonEncode(statusList);
 
-                            ///
-                            String jsonShoesList2 =
-                                jsonEncode(numberOfShoesList);
+                              prefs?.setString('statusList', jsonShoesList1);
 
-                            prefs?.setString(
-                                'numberOfShoesList', jsonShoesList2);
-                            setState(() {});
+                              ///
+                              String jsonShoesList2 =
+                                  jsonEncode(numberOfShoesList);
+
+                              prefs?.setString(
+                                  'numberOfShoesList', jsonShoesList2);
+
+                              setState(() {});
+
                           },
                           isAddProduct: statusList![index],
                         );
@@ -130,6 +128,8 @@ class _OurProductsPageState extends State<OurProductsPage> {
       ),
     ));
   }
+
+  void naviYourCart() async {}
 
   // Fetch content from the json file
   Future<void> readJson() async {
