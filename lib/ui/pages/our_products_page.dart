@@ -8,8 +8,7 @@ import 'package:g_sneaker/ui/pages/your_cart_page.dart';
 import 'package:g_sneaker/ui/wigets/out_products/header_widget.dart';
 import 'package:g_sneaker/ui/wigets/out_products/product_card.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
-import 'package:g_sneaker/utils/my_images.dart';
-import 'package:animations/animations.dart';
+
 
 class OurProductsPage extends StatefulWidget {
   static const String routeName = "/OurProductsPage";
@@ -31,7 +30,6 @@ class _OurProductsPageState extends State<OurProductsPage> {
     // TODO: implement initState
     super.initState();
     readJson();
-
   }
 
   @override
@@ -91,7 +89,6 @@ class _OurProductsPageState extends State<OurProductsPage> {
 
                           List musics = jsonDecode(musicsString!);
                           statusList = musics.cast<bool>();
-
                         }
 
                         return ProductCard(
@@ -112,9 +109,11 @@ class _OurProductsPageState extends State<OurProductsPage> {
                             prefs?.setString('statusList', jsonShoesList1);
 
                             ///
-                            String jsonShoesList2 = jsonEncode(numberOfShoesList);
+                            String jsonShoesList2 =
+                                jsonEncode(numberOfShoesList);
 
-                            prefs?.setString('numberOfShoesList', jsonShoesList2);
+                            prefs?.setString(
+                                'numberOfShoesList', jsonShoesList2);
                             setState(() {});
                           },
                           isAddProduct: statusList![index],

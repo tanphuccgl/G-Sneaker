@@ -39,7 +39,17 @@ class _YourCartPageState extends State<YourCartPage> {
     statusList = widget.statusList;
     if (prefs?.getDouble("total") != null) {
       total = prefs?.getDouble("total");
-    }
+
+    }else
+      {
+        for (int i = 0; i < shoesList!.length; i++) {
+          for (int j = 0; j < numberOfShoesList!.length; j++) {
+            if (i == j) {
+              total = total! + shoesList![i].price! * numberOfShoesList![j];
+            }
+          }
+        }
+      }
 
     if (prefs?.getString('statusList') != null) {
       final String? musicsString = prefs?.getString('statusList');
@@ -64,13 +74,7 @@ class _YourCartPageState extends State<YourCartPage> {
 
       shoesList = musics.cast<Shoes>();
     }
-    for (int i = 0; i < shoesList!.length; i++) {
-      for (int j = 0; j < numberOfShoesList!.length; j++) {
-        if (i == j) {
-          total = total! + shoesList![i].price! * numberOfShoesList![j];
-        }
-      }
-    }
+
   }
 
   void saveCartLocal({double? total}) {
@@ -94,7 +98,6 @@ class _YourCartPageState extends State<YourCartPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-print(numberOfShoesList);
     return Scaffold(
         body: SizedBox(
       width: size.width,
