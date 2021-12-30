@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:g_sneaker/main.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
 import 'package:g_sneaker/ui/pages/your_cart_page.dart';
 import 'package:g_sneaker/ui/wigets/out_products/header_widget.dart';
@@ -21,7 +22,6 @@ class OurProductsPage extends StatefulWidget {
 
 class _OurProductsPageState extends State<OurProductsPage> {
   List<Shoes> shoesList = [];
-  List<Shoes> shoesCart = [];
   bool? isAddProduct;
   List<bool>? statusList;
   List<int>? numberOfShoesList;
@@ -31,10 +31,12 @@ class _OurProductsPageState extends State<OurProductsPage> {
     // TODO: implement initState
     super.initState();
     readJson();
+
   }
 
   @override
   Widget build(BuildContext context) {
+    // prefs?.clear();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SizedBox(
@@ -83,6 +85,15 @@ class _OurProductsPageState extends State<OurProductsPage> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        if (prefs?.getString('statusList') != null) {
+                          final String? musicsString =
+                              prefs?.getString('statusList');
+
+                          List musics = jsonDecode(musicsString!);
+                          statusList = musics.cast<bool>();
+
+                        }
+
                         return ProductCard(
                           shoes: shoesList[index],
                           onPressed: () {
@@ -91,6 +102,19 @@ class _OurProductsPageState extends State<OurProductsPage> {
                               numberOfShoesList?[index] = 1;
                             }
 
+                            String jsonShoesList = jsonEncode(shoesList);
+
+                            prefs?.setString('shoesList', jsonShoesList);
+
+                            ///23
+                            String jsonShoesList1 = jsonEncode(statusList);
+
+                            prefs?.setString('statusList', jsonShoesList1);
+
+                            ///
+                            String jsonShoesList2 = jsonEncode(numberOfShoesList);
+
+                            prefs?.setString('numberOfShoesList', jsonShoesList2);
                             setState(() {});
                           },
                           isAddProduct: statusList![index],
@@ -115,7 +139,7 @@ class _OurProductsPageState extends State<OurProductsPage> {
     if (data != null) {
       shoesList = (data.shoes!);
       statusList = List.generate(shoesList.length, (index) => false);
-      numberOfShoesList = List.generate(shoesList.length, (index) => index= 0);
+      numberOfShoesList = List.generate(shoesList.length, (index) => index = 0);
       setState(() {});
     }
   }

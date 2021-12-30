@@ -6,6 +6,9 @@ import 'package:g_sneaker/model/shoes_model.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/header_cart.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/item_cart_widget.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
+import 'dart:convert';
+
+import '../../main.dart';
 
 class YourCartPage extends StatefulWidget {
   final List<int>? numberOfShoesList;
@@ -34,8 +37,33 @@ class _YourCartPageState extends State<YourCartPage> {
     shoesList = widget.shoesList;
     numberOfShoesList = widget.numberOfShoesList;
     statusList = widget.statusList;
-    //  print("haha ${shoesList?.length}");
-    print("hah1 ${numberOfShoesList}");
+    if (prefs?.getDouble("total") != null) {
+      total = prefs?.getDouble("total");
+    }
+
+    if (prefs?.getString('statusList') != null) {
+      final String? musicsString = prefs?.getString('statusList');
+
+      List musics = jsonDecode(musicsString!);
+
+      statusList = musics.cast<bool>();
+    }
+    if (prefs?.getString('numberOfShoesList') != null) {
+      final String? musicsString = prefs?.getString('numberOfShoesList');
+
+      List musics = jsonDecode(musicsString!);
+
+      numberOfShoesList = musics.cast<int>();
+    }
+    if (prefs?.getString('shoesList') != null) {
+      final String? musicsString = prefs?.getString('shoesList');
+
+      List<Shoes> musics = (json.decode(musicsString!) as List)
+          .map((i) => Shoes.fromJson(i))
+          .toList();
+
+      shoesList = musics.cast<Shoes>();
+    }
     for (int i = 0; i < shoesList!.length; i++) {
       for (int j = 0; j < numberOfShoesList!.length; j++) {
         if (i == j) {
@@ -45,10 +73,28 @@ class _YourCartPageState extends State<YourCartPage> {
     }
   }
 
+  void saveCartLocal({double? total}) {
+    prefs?.setDouble("total", total!);
+
+    String jsonShoesList = jsonEncode(shoesList);
+
+    prefs?.setString('shoesList', jsonShoesList);
+
+    ///
+    String jsonShoesList1 = jsonEncode(statusList);
+
+    prefs?.setString('statusList', jsonShoesList1);
+
+    ///
+    String jsonShoesList2 = jsonEncode(numberOfShoesList);
+
+    prefs?.setString('numberOfShoesList', jsonShoesList2);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+print(numberOfShoesList);
     return Scaffold(
         body: SizedBox(
       width: size.width,
@@ -100,16 +146,20 @@ class _YourCartPageState extends State<YourCartPage> {
                                         numberOfShoesList![index]--;
                                         total =
                                             total! - shoesList![index].price!;
+
                                         if (numberOfShoesList![index] <= 0) {
                                           statusList?[index] = false;
-                                        }
 
+                                        }
+                                        saveCartLocal(total: total);
                                         setState(() {});
                                       },
                                       onPlus: () {
                                         numberOfShoesList![index]++;
                                         total =
                                             total! + shoesList![index].price!;
+                                        saveCartLocal(total: total);
+
                                         setState(() {});
                                       },
                                       onTrash: () {
@@ -118,9 +168,8 @@ class _YourCartPageState extends State<YourCartPage> {
                                                 numberOfShoesList![index];
                                         numberOfShoesList![index] = 0;
 
-                                        print("a ${shoesList![index].price}");
-                                        print("b ${numberOfShoesList![index]}");
                                         statusList?[index] = false;
+                                        saveCartLocal(total: total);
                                         setState(() {});
                                       },
                                     );
