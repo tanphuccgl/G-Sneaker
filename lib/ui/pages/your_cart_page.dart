@@ -32,6 +32,7 @@ class _YourCartPageState extends State<YourCartPage> {
   List<int>? numberOfShoesList;
   List<bool>? statusList;
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -40,34 +41,21 @@ class _YourCartPageState extends State<YourCartPage> {
     numberOfShoesList = widget.numberOfShoesList;
     statusList = widget.statusList;
 
-
-    if (prefs?.getDouble("total") != null  && prefs!.getDouble("total")! > 0) {
-      print("1");
-        total = prefs?.getDouble("total");
-
-    } else {
-      print("3");
-
-      total= CartModel.totalPrice(
-          total: total,
-          numberOfShoesList: numberOfShoesList,
-          shoesList: shoesList);
-    }
     if (prefs?.getString('statusList') != null) {
       final String? temp = prefs?.getString('statusList');
       List list = jsonDecode(temp!);
       statusList = list.cast<bool>();
-
     }
+
     if (prefs?.getString('numberOfShoesList') != null) {
       final String? temp = prefs?.getString('numberOfShoesList');
       List list = jsonDecode(temp!);
       numberOfShoesList = list.cast<int>();
-
     }else
       {
         numberOfShoesList;
       }
+
     if (prefs?.getString('shoesList') != null) {
       final String? temp = prefs?.getString('shoesList');
       List<Shoes> list =
@@ -75,26 +63,12 @@ class _YourCartPageState extends State<YourCartPage> {
       shoesList = list.cast<Shoes>();
 
     }
-
-
+    total= CartModel.totalPrice(
+        total: total,
+        numberOfShoesList: numberOfShoesList,
+        shoesList: shoesList);
   }
-  void saveCartLocal({
-    double? total,
-    List<Shoes>? shoesList,
-    List<int>? numberOfShoesList,
-    List<bool>? statusList,
-  }) {
-    prefs?.setDouble("total", total!);
 
-    String jsonShoesList = jsonEncode(shoesList);
-    prefs?.setString('shoesList', jsonShoesList);
-
-    String jsonStatusList = jsonEncode(statusList);
-    prefs?.setString('statusList', jsonStatusList);
-
-    String jsonNumberOfShoesList = jsonEncode(numberOfShoesList);
-    prefs?.setString('numberOfShoesList', jsonNumberOfShoesList);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +117,7 @@ class _YourCartPageState extends State<YourCartPage> {
                                         if (numberOfShoesList![index] <= 0) {
                                           statusList?[index] = false;
                                         }
-                                       saveCartLocal(
-                                            total: total,
+                                       CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
                                                 numberOfShoesList,
@@ -152,16 +125,15 @@ class _YourCartPageState extends State<YourCartPage> {
                                         setState(() {});
                                       },
                                       onPlus: () {
+
                                         numberOfShoesList![index]++;
                                         total =
                                             total! + shoesList![index].price!;
-                                     saveCartLocal(
-                                            total: total,
+                                        CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
-                                                numberOfShoesList,
+                                            numberOfShoesList,
                                             statusList: statusList);
-
                                         setState(() {});
                                       },
                                       onTrash: () {
@@ -169,13 +141,11 @@ class _YourCartPageState extends State<YourCartPage> {
                                             shoesList![index].price! *
                                                 numberOfShoesList![index];
                                         numberOfShoesList![index] = 0;
-
                                         statusList?[index] = false;
-                                 saveCartLocal(
-                                            total: total,
+                                        CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
-                                                numberOfShoesList,
+                                            numberOfShoesList,
                                             statusList: statusList);
                                         setState(() {});
                                       },

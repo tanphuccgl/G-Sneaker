@@ -6,13 +6,10 @@ import '../main.dart';
 
 class CartModel {
   static void saveCartLocal({
-    double? total,
     List<Shoes>? shoesList,
     List<int>? numberOfShoesList,
     List<bool>? statusList,
   }) {
-    prefs?.setDouble("total", total!);
-
     String jsonShoesList = jsonEncode(shoesList);
     prefs?.setString('shoesList', jsonShoesList);
 
@@ -36,34 +33,5 @@ class CartModel {
       }
     }
     return total!;
-  }
-
-  static List? getCartLocal({
-    double? total,
-    List<Shoes>? shoesList,
-    List<int>? numberOfShoesList,
-    List<bool>? statusList,
-  }) {
-
-
-    if (prefs?.getString('statusList') != null) {
-      final String? temp = prefs?.getString('statusList');
-      List list = jsonDecode(temp!);
-      statusList = list.cast<bool>();
-      return statusList;
-    }
-    if (prefs?.getString('numberOfShoesList') != null) {
-      final String? temp = prefs?.getString('numberOfShoesList');
-      List list = jsonDecode(temp!);
-      numberOfShoesList = list.cast<int>();
-      return numberOfShoesList;
-    }
-    if (prefs?.getString('shoesList') != null) {
-      final String? temp = prefs?.getString('shoesList');
-      List<Shoes> list =
-          (json.decode(temp!) as List).map((i) => Shoes.fromJson(i)).toList();
-      shoesList = list.cast<Shoes>();
-      return shoesList;
-    }
   }
 }
