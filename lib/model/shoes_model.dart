@@ -1,26 +1,3 @@
-class ShoesModel {
-  List<Shoes>? shoes;
-
-  ShoesModel({this.shoes});
-
-  ShoesModel.fromJson(Map<String, dynamic> json) {
-    if (json['shoes'] != null) {
-      shoes = <Shoes>[];
-      json['shoes'].forEach((v) {
-        shoes?.add(Shoes.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (shoes != null) {
-      data['shoes'] = shoes?.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class Shoes {
   int? id;
   String? image;
@@ -28,14 +5,20 @@ class Shoes {
   String? description;
   double? price;
   String? color;
+  int count;
+
+  bool isContent(List<Shoes> items) {
+    return items.indexWhere((e) => e.id == id) > 0;
+  }
 
   Shoes(
       {this.id,
-        this.image,
-        this.name,
-        this.description,
-        this.price,
-        this.color});
+      this.image,
+      this.name,
+      this.description,
+      this.price,
+      this.color,
+      this.count = 0});
 
   Shoes.fromJson(Map<String, dynamic> json) {
     id = json['id'];

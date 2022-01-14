@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:g_sneaker/model/cart_model.dart';
+import 'package:g_sneaker/model/prefs.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
 import 'package:g_sneaker/ui/wigets/background.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/header_cart.dart';
@@ -28,10 +28,9 @@ class YourCartPage extends StatefulWidget {
 
 class _YourCartPageState extends State<YourCartPage> {
   List<Shoes>? shoesList;
-  double? total =0;
+  double? total = 0;
   List<int>? numberOfShoesList;
   List<bool>? statusList;
-
 
   @override
   void initState() {
@@ -51,28 +50,24 @@ class _YourCartPageState extends State<YourCartPage> {
       final String? temp = prefs?.getString('numberOfShoesList');
       List list = jsonDecode(temp!);
       numberOfShoesList = list.cast<int>();
-    }else
-      {
-        numberOfShoesList;
-      }
+    } else {
+      numberOfShoesList;
+    }
 
     if (prefs?.getString('shoesList') != null) {
       final String? temp = prefs?.getString('shoesList');
       List<Shoes> list =
-      (json.decode(temp!) as List).map((i) => Shoes.fromJson(i)).toList();
+          (json.decode(temp!) as List).map((i) => Shoes.fromJson(i)).toList();
       shoesList = list.cast<Shoes>();
-
     }
-    total= CartModel.totalPrice(
+    total = CartModel.totalPrice(
         total: total,
         numberOfShoesList: numberOfShoesList,
         shoesList: shoesList);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SizedBox(
@@ -92,14 +87,14 @@ class _YourCartPageState extends State<YourCartPage> {
                     context: context,
                     total: total,
                     onPressed: () {
-                      Navigator.pop(context, [statusList,numberOfShoesList]);
+                      Navigator.pop(context, [statusList, numberOfShoesList]);
                     }),
                 statusList!.contains(true)
                     ? Expanded(
                         child: NotificationListener<
                             OverscrollIndicatorNotification>(
                           onNotification: (overscroll) {
-                            overscroll.disallowGlow();
+                            overscroll.disallowIndicator();
                             return true;
                           },
                           child: ListView.builder(
@@ -118,7 +113,7 @@ class _YourCartPageState extends State<YourCartPage> {
                                         if (numberOfShoesList![index] <= 0) {
                                           statusList?[index] = false;
                                         }
-                                       CartModel.saveCartLocal(
+                                        CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
                                                 numberOfShoesList,
@@ -126,14 +121,13 @@ class _YourCartPageState extends State<YourCartPage> {
                                         setState(() {});
                                       },
                                       onPlus: () {
-
                                         numberOfShoesList![index]++;
                                         total =
                                             total! + shoesList![index].price!;
                                         CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
-                                            numberOfShoesList,
+                                                numberOfShoesList,
                                             statusList: statusList);
                                         setState(() {});
                                       },
@@ -146,7 +140,7 @@ class _YourCartPageState extends State<YourCartPage> {
                                         CartModel.saveCartLocal(
                                             shoesList: shoesList,
                                             numberOfShoesList:
-                                            numberOfShoesList,
+                                                numberOfShoesList,
                                             statusList: statusList);
                                         setState(() {});
                                       },

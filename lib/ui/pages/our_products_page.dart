@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:g_sneaker/cubit/product_cubit.dart';
-import 'package:g_sneaker/cubit/product_state.dart';
+import 'package:g_sneaker/cubit/product/product_cubit.dart';
+import 'package:g_sneaker/cubit/product/product_state.dart';
 import 'package:g_sneaker/main.dart';
-import 'package:g_sneaker/model/cart_model.dart';
+import 'package:g_sneaker/model/prefs.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
 import 'package:g_sneaker/repositories/product_repository.dart';
 import 'package:g_sneaker/ui/pages/your_cart_page.dart';
@@ -91,7 +91,7 @@ class _OurProductsPageState extends State<OurProductsPage> {
                             child: NotificationListener<
                                 OverscrollIndicatorNotification>(
                               onNotification: (overscroll) {
-                                overscroll.disallowGlow();
+                                overscroll.disallowIndicator();
                                 return true;
                               },
                               child: ListView.builder(

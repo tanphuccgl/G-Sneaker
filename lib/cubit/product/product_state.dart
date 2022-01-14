@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:g_sneaker/model/shoes_model.dart';
+part of 'product_cubit.dart';
 
 @immutable
 abstract class ProductState extends Equatable {
@@ -19,7 +17,7 @@ class ProductLoading extends ProductState {
 }
 
 class ProductLoaded extends ProductState {
-  final ShoesModel shoes;
+  final List<Shoes> shoes;
 
   const ProductLoaded({required this.shoes});
 
