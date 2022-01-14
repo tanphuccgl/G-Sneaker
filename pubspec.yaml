@@ -39,6 +39,8 @@ dependencies:
   auto_size_text: ^3.0.0
   animations: ^2.0.1
   shared_preferences: ^2.0.11
+  flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
 
 
 

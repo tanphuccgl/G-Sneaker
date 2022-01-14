@@ -72,6 +72,7 @@ class _YourCartPageState extends State<YourCartPage> {
 
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SizedBox(
