@@ -7,6 +7,7 @@ import '../main.dart';
 
 class Prefs {
   static late SharedPreferences _prefs;
+
   static init() async {
     _prefs = await SharedPreferences.getInstance();
   }
@@ -18,20 +19,11 @@ class Prefs {
     _prefs.setString('shoesList', jsonShoesList);
   }
 
-  static List<Shoes> loadCart() {}
+  static List<Shoes> loadCart() {
+    final String? temp = _prefs.getString('shoesList');
+    List<Shoes> list =
+        (json.decode(temp!) as List).map((i) => Shoes.fromJson(i)).toList();
 
-  // static double totalPrice({
-  //   double? total,
-  //   List<Shoes>? shoesList,
-  //   List<int>? numberOfShoesList,
-  // }) {
-  //   for (int i = 0; i < shoesList!.length; i++) {
-  //     for (int j = 0; j < numberOfShoesList!.length; j++) {
-  //       if (i == j) {
-  //         total = total! + shoesList[i].price! * numberOfShoesList[j];
-  //       }
-  //     }
-  //   }
-  //   return total!;
-  // }
+    return list.cast<Shoes>();
+  }
 }

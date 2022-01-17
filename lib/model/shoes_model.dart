@@ -5,20 +5,19 @@ class Shoes {
   String? description;
   double? price;
   String? color;
-  int count;
+  int? count;
+  bool? isContent;
 
-  bool isContent(List<Shoes> items) {
-    return items.indexWhere((e) => e.id == id) > 0;
-  }
-
-  Shoes(
-      {this.id,
-      this.image,
-      this.name,
-      this.description,
-      this.price,
-      this.color,
-      this.count = 0});
+  Shoes({
+    this.id,
+    this.image,
+    this.name,
+    this.description,
+    this.price,
+    this.color,
+    this.isContent,
+    this.count = 0,
+  });
 
   Shoes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -27,6 +26,8 @@ class Shoes {
     description = json['description'];
     price = json['price'];
     color = json['color'];
+    count = 0;
+    isContent = false;
   }
 
   Map<String, dynamic> toJson() {

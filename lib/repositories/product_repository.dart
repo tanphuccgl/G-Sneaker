@@ -11,12 +11,14 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<Shoes>> fetchProduct() {
     return Future.delayed(
-      const Duration(seconds: 1),
+      const Duration(seconds: 0),
       () async {
         final String response =
             await rootBundle.loadString('assets/shoes.json');
         final data = json.decode(response);
-        return data['shoes'].map((e) => Shoes.fromJson(e)).toList();
+        List<Shoes> list =
+            List<Shoes>.from(data['shoes'].map((e) => Shoes.fromJson(e)));
+        return list;
       },
     );
   }

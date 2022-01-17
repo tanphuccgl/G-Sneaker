@@ -1,19 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:g_sneaker/cubit/cart/cart_cubit.dart';
+import 'package:g_sneaker/cubit/cart/cart_state.dart';
 import 'package:g_sneaker/cubit/product/product_cubit.dart';
-import 'package:g_sneaker/cubit/product/product_state.dart';
-import 'package:g_sneaker/main.dart';
 import 'package:g_sneaker/model/prefs.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
-import 'package:g_sneaker/repositories/product_repository.dart';
 import 'package:g_sneaker/ui/pages/your_cart_page.dart';
 import 'package:g_sneaker/ui/wigets/background.dart';
-import 'package:g_sneaker/ui/wigets/out_products/header_widget.dart';
 import 'package:g_sneaker/ui/wigets/out_products/product_card.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
+import 'package:g_sneaker/utils/my_images.dart';
 
 class OurProductsPage extends StatefulWidget {
   static const String routeName = "/OurProductsPage";
@@ -25,35 +23,26 @@ class OurProductsPage extends StatefulWidget {
 }
 
 class _OurProductsPageState extends State<OurProductsPage> {
-  List<Shoes> shoesList = [];
-  bool? isAddProduct;
-  List<bool>? statusList;
-  List<int>? numberOfShoesList;
+  late List<Shoes> shoesList;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // readJson();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // prefs?.clear();
+    //  Prefs?.init().clear();
+
     return BlocProvider(
-      create: (context) => ProductCubit(ProductRepositoryImpl()),
+      create: (context) => ProductCubit(),
       child: Scaffold(
         body: BlocBuilder<ProductCubit, ProductState>(
           builder: (context, state) {
             if (state is ProductLoaded) {
-              shoesList = (state.shoes.shoes)!;
-              if (prefs?.getString('statusList') == null &&
-                  prefs?.getString('numberOfShoesList') == null) {
-                statusList = List.generate(shoesList.length, (index) => false);
-                numberOfShoesList =
-                    List.generate(shoesList.length, (index) => index = 0);
-              }
+              shoesList = state.shoes;
 
               return SizedBox(
                 width: size.width,
@@ -69,54 +58,90 @@ class _OurProductsPageState extends State<OurProductsPage> {
                           SizedBox(
                             height: size.width / 20,
                           ),
-                          headerWidget(
-                              number: totalShoes(
-                                  numberOfShoesList: numberOfShoesList!),
-                              context: context,
-                              onPressed: () async {
-                                List result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => YourCartPage(
-                                              shoesList: shoesList,
-                                              statusList: statusList,
-                                              numberOfShoesList:
-                                                  numberOfShoesList,
-                                            )));
-                                statusList = result.first;
-                                numberOfShoesList = result[1];
-                                setState(() {});
-                              }),
+                          SizedBox(
+                            width: size.width,
+                            height: size.width / 3.7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image(
+                                      image: AssetImage(nikeIcon),
+                                      height: size.width / 6,
+                                      width: size.width / 6,
+                                    ),
+                                    Stack(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () async {
+                                            List<Shoes> result =
+                                                await Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            YourCartPage(
+                                                                shoesList:
+                                                                    shoesList)));
+
+                                            shoesList = result;
+                                            setState(() {});
+                                          },
+                                          icon: Image.asset(cartIcon),
+                                          iconSize: size.width / 10,
+                                        ),
+                                        BlocProvider(
+                                            create: (context) =>
+                                                CartCubit(shoesList),
+                                            child: BlocBuilder<CartCubit,
+                                                CartState>(
+                                              builder: (context, state) {
+                                                CartCubit(shoesList)
+                                                    .getCart(shoesList);
+
+                                                return state.items != null
+                                                    ? Text(
+                                                        "${totalShoes(shoesList: state.items!)}")
+                                                    : const Text("321");
+                                              },
+                                            )),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "Our Products",
+                                  style: TextStyle(
+                                      fontFamily: "Rubik",
+                                      color: blackColor,
+                                      fontSize: size.width / 13,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
                           Expanded(
                             child: NotificationListener<
                                 OverscrollIndicatorNotification>(
                               onNotification: (overscroll) {
-                                overscroll.disallowIndicator();
+                                overscroll.disallowGlow();
                                 return true;
                               },
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  if (prefs?.getString('statusList') != null) {
-                                    final String? temp =
-                                        prefs?.getString('statusList');
-                                    List list = jsonDecode(temp!);
-                                    statusList = list.cast<bool>();
-                                  }
                                   return ProductCard(
                                     shoes: shoesList[index],
                                     onPressed: () {
-                                      statusList![index] = true;
-                                      if (statusList![index] == true) {
-                                        numberOfShoesList?[index] = 1;
-                                      }
-                                      CartModel.saveCartLocal(
-                                          shoesList: shoesList,
-                                          numberOfShoesList: numberOfShoesList,
-                                          statusList: statusList);
+                                      shoesList[index].isContent = true;
+                                      shoesList[index].count = 1;
+
                                       setState(() {});
                                     },
-                                    isAddProduct: statusList![index],
+                                    isAddProduct: shoesList[index].isContent,
                                   );
                                 },
                                 itemCount: shoesList.length,
@@ -146,23 +171,11 @@ class _OurProductsPageState extends State<OurProductsPage> {
     );
   }
 
-  int totalShoes({required List<int> numberOfShoesList}) {
+  int totalShoes({required List<Shoes> shoesList}) {
     int total = 0;
-    for (int i = 0; i < numberOfShoesList.length; i++) {
-      total = total + numberOfShoesList[i];
+    for (int i = 0; i < shoesList.length; i++) {
+      total = total + int.parse(shoesList[i].count.toString());
     }
     return total;
-  }
-
-  // Fetch content from the json file
-  Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/shoes.json');
-    final data = ShoesModel.fromJson(json.decode(response));
-    if (data != null) {
-      shoesList = (data.shoes!);
-      statusList = List.generate(shoesList.length, (index) => false);
-      numberOfShoesList = List.generate(shoesList.length, (index) => index = 0);
-      setState(() {});
-    }
   }
 }
