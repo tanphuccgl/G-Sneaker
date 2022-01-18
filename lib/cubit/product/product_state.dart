@@ -1,5 +1,6 @@
 part of 'product_cubit.dart';
 
+// TODO: refactor
 @immutable
 abstract class ProductState extends Equatable {
   const ProductState();

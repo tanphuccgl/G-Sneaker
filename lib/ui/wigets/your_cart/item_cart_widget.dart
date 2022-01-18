@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
-import 'package:g_sneaker/ui/wigets/your_cart/buttons_widget.dart';
+import 'package:g_sneaker/ui/wigets/your_cart/icon_circle_button.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
 import 'package:g_sneaker/utils/my_images.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+// TODO
 class ItemCartWidget extends StatefulWidget {
-  final Shoes? shoes;
-  final Function()? onMinus;
-  final Function()? onPlus;
-  final Function()? onTrash;
+  final Shoes shoes;
+  // TODO
+  // final Function()? onMinus;
+  // final Function()? onPlus;
+  // final Function()? onTrash;
   final int? quantily;
 
   const ItemCartWidget(
       {Key? key,
       this.quantily,
-      this.shoes,
+      required this.shoes,
       this.onTrash,
       this.onPlus,
       this.onMinus})
@@ -26,14 +28,7 @@ class ItemCartWidget extends StatefulWidget {
 }
 
 class _ItemCartWidgetState extends State<ItemCartWidget> {
-  Shoes? data;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    data = widget.shoes;
-  }
+  Shoes get data => widget.shoes;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +41,11 @@ class _ItemCartWidgetState extends State<ItemCartWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _image(context: context, color: data!.color, image: data!.image!),
+            _image(context: context, color: data.color, image: data.image!),
             _info(
               context: context,
-              title: data!.name,
-              price: data!.price,
+              title: data.name,
+              price: data.price,
               quantily: widget.quantily,
               onTrash: widget.onTrash,
               onPlus: widget.onPlus,
@@ -82,7 +77,6 @@ Widget _info(
         Text(
           title!,
           style: TextStyle(
-              fontFamily: "Rubik",
               color: blackColor,
               fontSize: size.width / 25,
               fontWeight: FontWeight.bold),
@@ -90,7 +84,6 @@ Widget _info(
         Text(
           "\$$price",
           style: TextStyle(
-              fontFamily: "Rubik",
               color: blackColor,
               fontSize: size.width / 17,
               fontWeight: FontWeight.bold),
@@ -125,11 +118,7 @@ Widget _bottom(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              iconButton(
-                  context: context,
-                  icon: minusIcon,
-                  color: Colors.grey.shade300,
-                  onPressed: onMinus),
+              IconCircleButton(icon: minusIcon, onPressed: onMinus),
               Text(
                 "$quantily",
                 style: TextStyle(
@@ -137,19 +126,12 @@ Widget _bottom(
                     fontSize: size.width / 20,
                     fontWeight: FontWeight.normal),
               ),
-              iconButton(
-                  context: context,
-                  icon: plusIcon,
-                  color: Colors.grey.shade300,
-                  onPressed: onPlus)
+              IconCircleButton(icon: plusIcon, onPressed: onPlus)
             ],
           ),
         ),
-        iconButton(
-            context: context,
-            icon: trashIcon,
-            color: yellowColor,
-            onPressed: onTrash)
+        IconCircleButton(
+            icon: trashIcon, color: yellowColor, size: 22, onPressed: onTrash)
       ],
     ),
   );

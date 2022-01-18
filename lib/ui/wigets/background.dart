@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:g_sneaker/utils/my_colors.dart';
 
-Widget background({BuildContext? context})
-{
+// TODO refactor. user canvas and custom paint
+Widget background({BuildContext? context}) {
   Size size = MediaQuery.of(context!).size;
-return   Positioned(
+  return Positioned(
     top: -150,
     left: -250,
     child: Container(
@@ -12,7 +12,7 @@ return   Positioned(
       width: size.width,
       decoration: BoxDecoration(
           color: yellowColor,
-          borderRadius:
-          BorderRadius.all(Radius.circular(size.width))),
-    ));
+          borderRadius: BorderRadius.all(Radius.circular(size.width))),
+    ),
+  );
 }

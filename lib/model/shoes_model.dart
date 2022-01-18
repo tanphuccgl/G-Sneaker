@@ -6,7 +6,6 @@ class Shoes {
   double? price;
   String? color;
   int? count;
-  bool? isContent;
 
   Shoes({
     this.id,
@@ -15,7 +14,6 @@ class Shoes {
     this.description,
     this.price,
     this.color,
-    this.isContent,
     this.count = 0,
   });
 
@@ -27,7 +25,6 @@ class Shoes {
     price = json['price'];
     color = json['color'];
     count = 0;
-    isContent = false;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,5 +36,25 @@ class Shoes {
     data['price'] = price;
     data['color'] = color;
     return data;
+  }
+
+  Shoes copyWith({
+    int? id,
+    String? image,
+    String? name,
+    String? description,
+    double? price,
+    String? color,
+    int? count,
+  }) {
+    return Shoes(
+      id: id ?? this.id,
+      image: image ?? this.image,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      color: color ?? this.color,
+      count: count ?? this.count,
+    );
   }
 }

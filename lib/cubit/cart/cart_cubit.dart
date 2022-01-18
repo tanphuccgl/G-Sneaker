@@ -5,16 +5,35 @@ import 'package:g_sneaker/repositories/domain.dart';
 import 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  final List<Shoes> list;
-  CartCubit(this.list) : super(const CartState()) {
-    getCart(list);
+  CartCubit() : super(const CartState()) {
+    getCart();
   }
 
   final Domain domain = Domain();
 
-  Future<void> getCart(List<Shoes> list) async {
-    emit(const CartLoading());
-    final cart = await domain.cart.fetchCart(list);
-    emit(CartState(cart));
+  Future<void> getCart() async {
+    emit(state.copyWithLoading());
+    final cart = await domain.cart.fetchCart();
+    emit(state.copyWithItem(cart));
+  }
+
+  void onItemChanged() {
+    domain.cart.saveCart(state.items ?? []);
+  }
+
+  void addItem(Shoes item) {
+    // TODO
+    final List<Shoes> items = [...(state.items ?? []), item];
+    emit(state.copyWithItem(items));
+  }
+
+  void removeItem(Shoes item) {
+    // TODO
+  }
+  void increaseNumber(Shoes item) {
+    // TODO
+  }
+  void decreaseNumber(Shoes item) {
+    // TODO
   }
 }
