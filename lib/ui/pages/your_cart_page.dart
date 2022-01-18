@@ -51,123 +51,103 @@ class _YourCartPageState extends State<YourCartPage> {
         body: BlocBuilder<CartCubit, CartState>(
           builder: (context, state) {
 
-            if(state.items != null)
-              {
-                for(var item in state.items!)
-                  {
-                    print("123 ${item.name}");
-                  }
                 return state.items != null
-                    ? Scaffold(
-                    body: SizedBox(
-                      width: size.width,
-                      height: size.height,
-                      child: Stack(
+                    ?  Stack(
+                  children: [
+                    background(context: context),
+                    Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: size.width / 15),
+                      child: Column(
                         children: [
-                          background(context: context),
-                          Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: size.width / 15),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: size.width / 20,
-                                ),
-                                headerCartWidget(
-                                    context: context,
-                                    total: total,
-                                    onPressed: () {
-                                      Navigator.pop(context, widget.shoesList);
-                                    }),
-                                state.items!.isNotEmpty
-                                    ? Expanded(
-                                  child: NotificationListener<
-                                      OverscrollIndicatorNotification>(
-                                    onNotification: (overscroll) {
-                                      overscroll.disallowGlow();
-                                      return true;
-                                    },
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return ItemCartWidget(
-                                          shoes: state.items![index],
-                                          quantily:
-                                          state.items![index].count,
-                                          onMinus: () {
-                                            state.items![index].count =
-                                                state.items![index].count! -
-                                                    1;
-                                            total = total -
-                                                state.items![index].price!;
-                                            if (state
-                                                .items![index].count! <=
-                                                0) {
-                                              state.items![index]
-                                                  .isContent = false;
-                                              state.items!.removeAt(index);
-                                            }
 
-                                            setState(() {});
-                                          },
-                                          onPlus: () {
-                                            state.items![index].count =
-                                                state.items![index].count! +
-                                                    1;
-                                            total = total +
-                                                state.items![index].price!;
+                          headerCartWidget(
+                              context: context,
+                              total: total,
+                              onPressed: () {
+                                Navigator.pop(context, widget.shoesList);
+                              }),
+                          state.items!.isNotEmpty
+                              ? Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,physics:const BouncingScrollPhysics() ,
+                              itemBuilder: (context, index) {
+                                return ItemCartWidget(
+                                  shoes: state.items![index],key: Key(state.items![index].id.toString()),
+                                  quantily:
+                                  state.items![index].count,
+                                  onMinus: () {
+                                    state.items![index].count =
+                                        state.items![index].count! -
+                                            1;
+                                    total = total -
+                                        state.items![index].price!;
+                                    if (state
+                                        .items![index].count! <=
+                                        0) {
+                                      state.items![index]
+                                          .isContent = false;
+                                      state.items!.removeAt(index);
+                                    }
 
-                                            setState(() {});
-                                          },
-                                          onTrash: () {
-                                            total = total -
-                                                state.items![index].price! *
-                                                    state.items![index]
-                                                        .count!
-                                                        .toDouble();
+                                    setState(() {});
+                                  },
+                                  onPlus: () {
+                                    state.items![index].count =
+                                        state.items![index].count! +
+                                            1;
+                                    total = total +
+                                        state.items![index].price!;
 
-                                            state.items![index].isContent =
-                                            false;
-                                            shoesList[index].isContent =
-                                            false;
+                                    setState(() {});
+                                  },
+                                  onTrash: () {
+                                    total = total -
+                                        state.items![index].price! *
+                                            state.items![index]
+                                                .count!
+                                                .toDouble();
 
-                                            state.items!.remove(
-                                                state.items![index]);
-                                            setState(() {
-                                             
-                                            });
-                                          },
-                                        );
-                                      },
-                                      itemCount: state.items!.length,
-                                    ),
-                                  ),
-                                )
-                                    : Padding(
-                                  padding:
-                                  EdgeInsets.only(top: size.width / 15),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      "Your cart is empty.",
-                                      style: TextStyle(
-                                          fontFamily: "Rubik",
-                                          color: blackColor,
-                                          fontSize: size.width / 20,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                  ),
-                                )
-                              ],
+                                    state.items![index].isContent =
+                                    false;
+                                    shoesList[index].isContent =
+                                    false;
+
+                                    state.items!.remove(
+                                        state.items![index]);
+                                    setState(() {
+
+                                    });
+                                  },
+                                );
+                              },
+                              itemCount: state.items!.length,
                             ),
-                          ),
+                          )
+                              : Padding(
+                            padding:
+                            EdgeInsets.only(top: size.width / 15),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Your cart is empty.",
+                                style: TextStyle(
+                                    fontFamily: "Rubik",
+                                    color: blackColor,
+                                    fontSize: size.width / 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          )
                         ],
                       ),
-                    ))
+                    ),
+                  ],
+                )
                     : const Center(
                   child: CircularProgressIndicator(),
                 );
-              }return Container();
+
 
           },
         ),
