@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           fontFamily: "Rubik",
           primarySwatch: Colors.blue,
-          textTheme: TextTheme(
+          textTheme: const TextTheme(
             button: TextStyle(
-              color: blackColor,
+              color: MyColors.blackColor,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           buttonTheme: const ButtonThemeData(height: 50),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-                primary: yellowColor,
+                primary: MyColors.yellowColor,
                 onPrimary: Colors.black,
                 elevation: 0,
                 shape: RoundedRectangleBorder(

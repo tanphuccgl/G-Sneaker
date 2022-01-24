@@ -1,10 +1,17 @@
-// TODO: user part of and part
-import 'package:equatable/equatable.dart';
-
-import 'package:g_sneaker/model/shoes_model.dart';
+part of 'cart_cubit.dart';
 
 class CartState extends Equatable {
   final List<Shoes>? items;
+
+  double totalPrice(List<Shoes> shoes) {
+    double total = 0;
+    for (int i = 0; i < shoes.length; i++) {
+      total = total +
+          double.parse(shoes[i].count.toString()) *
+              shoes[i].price!.toDouble();
+    }
+    return total;
+  }
 
   int get count => items?.length ?? 0;
   bool isContent(int id) {

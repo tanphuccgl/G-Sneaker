@@ -13,33 +13,31 @@ class ProductCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _image(context: context, color: shoes.color, image: shoes.image!),
+        _image(context,
+            color: shoes.color ?? "0xFFFFFFF",
+            image: shoes.image ?? "errorImage"),
         const SizedBox(height: 15),
         _title(title: shoes.name ?? 'N/A'),
         const SizedBox(height: 15),
-        if (shoes.description != null) ...[
-          _description(shoes.description!),
-          const SizedBox(height: 10),
-        ],
-        _bottom(context, price: shoes.price)
+        _description(descrip: shoes.description ?? "N/A"),
+        const SizedBox(height: 10),
+        _bottom(price: shoes.price ?? -1)
       ],
     );
   }
 
-  Widget _bottom(BuildContext? context, {double? price}) {
+  Widget _bottom({required double price}) {
     return Row(
       children: [
         Expanded(
-          child: price == null
-              ? const SizedBox()
-              : Text(
-                  "\$$price",
-                  style: TextStyle(
-                    color: blackColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          child: Text(
+            "\$$price",
+            style: const TextStyle(
+              color: MyColors.blackColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         AddToCartButton(shoes),
       ],
@@ -49,28 +47,31 @@ class ProductCard extends StatelessWidget {
   Widget _title({required String title}) {
     return Text(
       title,
-      style: TextStyle(
-          color: blackColor, fontSize: 17, fontWeight: FontWeight.bold),
+      style: const TextStyle(
+          color: MyColors.blackColor,
+          fontSize: 17,
+          fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _description(String descrip) {
+  Widget _description({required String descrip}) {
     return Text(descrip);
   }
 
-  Widget _image({BuildContext? context, String? color, String? image}) {
-    Size size = MediaQuery.of(context!).size;
+  Widget _image(BuildContext context,
+      {required String color, required String image}) {
+    Size size = MediaQuery.of(context).size;
     return AspectRatio(
       aspectRatio: 1 / 0.95,
       child: Container(
         decoration: BoxDecoration(
-          color: HexColor("$color"),
+          color: HexColor(color),
           borderRadius: BorderRadius.circular(20),
         ),
         child: RotationTransition(
           turns: const AlwaysStoppedAnimation(-22 / 360),
           child: Image.network(
-            image!,
+            image,
             alignment: Alignment.topCenter,
             height: size.width / 1,
             width: size.width / 1,

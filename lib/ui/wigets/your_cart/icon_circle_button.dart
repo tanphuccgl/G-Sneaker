@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:g_sneaker/utils/my_images.dart';
 
 class IconCircleButton extends StatelessWidget {
   const IconCircleButton(

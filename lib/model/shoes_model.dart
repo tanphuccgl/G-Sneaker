@@ -14,7 +14,7 @@ class Shoes {
     this.description,
     this.price,
     this.color,
-    this.count = 0,
+    this.count ,
   });
 
   Shoes.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Shoes {
     description = json['description'];
     price = json['price'];
     color = json['color'];
-    count = 0;
+    count = json['count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +35,7 @@ class Shoes {
     data['description'] = description;
     data['price'] = price;
     data['color'] = color;
+    data['count'] = count;
     return data;
   }
 

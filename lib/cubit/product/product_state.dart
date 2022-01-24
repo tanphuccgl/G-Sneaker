@@ -1,36 +1,12 @@
 part of 'product_cubit.dart';
 
-// TODO: refactor
-@immutable
-abstract class ProductState extends Equatable {
-  const ProductState();
+class ProductState extends Equatable {
+  final List<Shoes>? items;
+  const ProductState([this.items]);
 
   @override
-  List<Object> get props => [];
-}
-
-class ProductInitial extends ProductState {
-  const ProductInitial();
-}
-
-class ProductLoading extends ProductState {
-  const ProductLoading();
-}
-
-class ProductLoaded extends ProductState {
-  final List<Shoes> shoes;
-
-  const ProductLoaded({required this.shoes});
-
-  @override
-  List<Object> get props => [shoes];
-}
-
-class ProductError extends ProductState {
-  final String message;
-
-  const ProductError(this.message);
-
-  @override
-  List<Object> get props => [message];
+  List<Object?> get props => [items];
+  ProductState copyWithItem(List<Shoes> items) {
+    return ProductState(items);
+  }
 }

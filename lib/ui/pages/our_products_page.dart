@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:g_sneaker/cubit/cart/cart_cubit.dart';
-import 'package:g_sneaker/cubit/cart/cart_state.dart';
 import 'package:g_sneaker/cubit/product/product_cubit.dart';
 import 'package:g_sneaker/model/shoes_model.dart';
-import 'package:g_sneaker/ui/pages/your_cart_page.dart';
 import 'package:g_sneaker/ui/wigets/background.dart';
 import 'package:g_sneaker/ui/wigets/out_products/product_card.dart';
 import 'package:g_sneaker/ui/wigets/your_cart/cart_icon_button.dart';
@@ -23,85 +20,68 @@ class OurProductsPage extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
-          if (state is ProductLoaded) {
-            final shoesList = state.shoes;
-
-            return Stack(
-              children: [
-                background(context: context),
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(padding, 20, padding, 0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Image(
-                                    image: AssetImage(nikeIcon),
-                                    height: size.width / 6,
-                                    width: size.width / 6,
-                                  ),
-                                  const CartIconButton(),
-                                ],
-                              ),
-                              Text(
-                                "Our Products",
-                                style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: size.width / 13,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: NotificationListener<
-                              OverscrollIndicatorNotification>(
-                            onNotification: (overscroll) {
-                              overscroll.disallowIndicator();
-                              return true;
-                            },
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return ProductCard(
-                                  shoes: shoesList[index],
-                                );
-                              },
-                              itemCount: shoesList.length,
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return const SizedBox(
-                                  height: 32,
-                                );
-                              },
+          final shoesList = state.items ?? [];
+          return Stack(
+            children: [
+              SizedBox(
+                width: size.width,
+                height: size.height,
+                child: CustomPaint(painter: CirclePainter()),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(padding, 20, padding, 0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Image(
+                                  image: const AssetImage(MyImage.nikeIcon),
+                                  height: size.width / 6,
+                                  width: size.width / 6,
+                                ),
+                                const CartIconButton(),
+                              ],
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                            Text(
+                              "Our Products",
+                              style: TextStyle(
+                                  color: MyColors.blackColor,
+                                  fontSize: size.width / 13,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return ProductCard(
+                              shoes: shoesList[index],
+                            );
+                          },
+                          itemCount: shoesList.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(
+                              height: 32,
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              ],
-            );
-          } else if (state is ProductLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is ProductError) {
-            return const Center(
-              child: Icon(Icons.close),
-            );
-          }
-
-          return Container();
+              ),
+            ],
+          );
         },
       ),
     );

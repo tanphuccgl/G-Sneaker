@@ -3,7 +3,7 @@ import 'package:g_sneaker/model/shoes_model.dart';
 
 abstract class CartRepository {
   Future<List<Shoes>> fetchCart();
-  Future<List<Shoes>> saveCart(List<Shoes> items);
+  Future<void> saveCart(List<Shoes> items);
 }
 
 class CartRepositoryImpl implements CartRepository {
@@ -14,9 +14,8 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<List<Shoes>> saveCart(List<Shoes> items) {
-    // TODO: implement saveCart
-    throw UnimplementedError();
+  Future<void> saveCart(List<Shoes> items) async {
+    Prefs.saveCartLocal(shoesList: items);
   }
 }
 

@@ -13,15 +13,18 @@ class Prefs {
   static void saveCartLocal({
     List<Shoes>? shoesList,
   }) {
+
     String jsonShoesList = jsonEncode(shoesList);
-    _prefs.setString('shoesList1', jsonShoesList);
+    _prefs.setString('shoesList', jsonShoesList);
   }
 
   static List<Shoes> loadCart() {
-    final String? temp = _prefs.getString('shoesList1');
+    final String? temp = _prefs.getString('shoesList');
     if (temp != null) {
+
       List<Shoes> list =
           (json.decode(temp) as List).map((i) => Shoes.fromJson(i)).toList();
+
       return list.cast<Shoes>();
     }
     return [];
