@@ -1,26 +1,3 @@
-class ShoesModel {
-  List<Shoes>? shoes;
-
-  ShoesModel({this.shoes});
-
-  ShoesModel.fromJson(Map<String, dynamic> json) {
-    if (json['shoes'] != null) {
-      shoes = <Shoes>[];
-      json['shoes'].forEach((v) {
-        shoes?.add(Shoes.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (shoes != null) {
-      data['shoes'] = shoes?.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class Shoes {
   int? id;
   String? image;
@@ -28,14 +5,17 @@ class Shoes {
   String? description;
   double? price;
   String? color;
+  int? count;
 
-  Shoes(
-      {this.id,
-        this.image,
-        this.name,
-        this.description,
-        this.price,
-        this.color});
+  Shoes({
+    this.id,
+    this.image,
+    this.name,
+    this.description,
+    this.price,
+    this.color,
+    this.count ,
+  });
 
   Shoes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -44,6 +24,7 @@ class Shoes {
     description = json['description'];
     price = json['price'];
     color = json['color'];
+    count = json['count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +35,27 @@ class Shoes {
     data['description'] = description;
     data['price'] = price;
     data['color'] = color;
+    data['count'] = count;
     return data;
+  }
+
+  Shoes copyWith({
+    int? id,
+    String? image,
+    String? name,
+    String? description,
+    double? price,
+    String? color,
+    int? count,
+  }) {
+    return Shoes(
+      id: id ?? this.id,
+      image: image ?? this.image,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      color: color ?? this.color,
+      count: count ?? this.count,
+    );
   }
 }

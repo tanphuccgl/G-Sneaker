@@ -1,6 +1,8 @@
-String checkIcon = "assets/images/check.png";
-String minusIcon = "assets/images/minus.png";
-String nikeIcon = "assets/images/nike.png";
-String plusIcon = "assets/images/plus.png";
-String trashIcon = "assets/images/trash.png";
-String cartIcon = "assets/images/cart.png";
+class MyImage {
+  static const String checkIcon = "assets/images/check.png";
+  static const String minusIcon = "assets/images/minus.png";
+  static const String nikeIcon = "assets/images/nike.png";
+  static const String plusIcon = "assets/images/plus.png";
+  static const String trashIcon = "assets/images/trash.png";
+  static const String cartIcon = "assets/images/cart.png";
+}
